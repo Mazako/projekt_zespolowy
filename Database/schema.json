@@ -1,0 +1,25 @@
+{
+  "User": {
+    "firstName":  "",
+    "lastName": "",
+    "e-mail": "",
+    "hash_password": "",
+    "role": ""
+  },
+
+  "Patient": {
+    "firstName": "",
+    "lastName": "",
+    "PESEL": "",
+    "gender": "",
+    "dateOfBirth": "",
+    "address": {},
+    "file_ids": []
+  },
+
+  "ECD": {
+    "doctor_id": "",
+    "file_id": "",
+    "GridFS stuff": {}
+  }
+}
