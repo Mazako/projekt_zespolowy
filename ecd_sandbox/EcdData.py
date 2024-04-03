@@ -2,9 +2,8 @@ import numpy as np
 
 
 class EcdData:
-    def __init__(self, frequency, mV_normalize_value, I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6):
+    def __init__(self, frequency, I, II, III, aVR, aVL, aVF, V1, V2, V3, V4, V5, V6):
         self.frequency = frequency
-        self.mV_normalize_value = mV_normalize_value
         self.I = I
         self.II = II
         self.III = III
