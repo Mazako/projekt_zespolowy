@@ -20,6 +20,13 @@
   "ECD": {
     "doctor_id": "",
     "file_id": "",
+    "annotations": [
+      {
+        "start_time": "",
+        "end_time": "",
+        "comment": ""
+      }
+    ],
     "GridFS stuff": {}
   }
 }

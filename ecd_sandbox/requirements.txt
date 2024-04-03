@@ -3,3 +3,5 @@ matplotlib
 jupyter
 numpy
 py-ecg-detectors
+neurokit2
+ts2vg
