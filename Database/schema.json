@@ -1,9 +1,9 @@
 {
   "Doctor": {
     "id": "",
-    "firstName":  "",
-    "lastName": "",
-    "e-mail": "",
+    "first_name":  "",
+    "last_name": "",
+    "email": "",
     "hash_password": ""
   },
 

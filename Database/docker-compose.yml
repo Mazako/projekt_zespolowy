@@ -6,5 +6,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGODB_INITDB_DATABASE: ecdHelperDB
     ports:
       - "27017:27017"
