@@ -1,26 +1,9 @@
 import io
-from typing import BinaryIO, Optional
-from bson import ObjectId
+from typing import BinaryIO
 
 import scipy
 
-from ..database import PyObjectId, EcdCollection
-from ..model.ecd import EcdModel, Signal
-
-
-async def save_ecd_file(hea: BinaryIO, mat: BinaryIO, ecd_collection: EcdCollection) -> PyObjectId:
-    ecd = import_mat(hea, mat)
-    result = await ecd_collection.insert_one(ecd.model_dump(by_alias=True, exclude_unset=True))
-    return PyObjectId(result.inserted_id)
-
-
-async def find_ecd_by_id(ecd_id: PyObjectId, ecd_collection: EcdCollection) -> Optional[EcdModel]:
-    result = await ecd_collection.find_one(
-        {'_id': ObjectId(ecd_id)}
-    )
-    if result is not None:
-        return EcdModel(**result)
-    return None
+from server.model.ecd import EcdModel, Signal
 
 
 def import_mat(hea_file: BinaryIO, mat_file: BinaryIO) -> EcdModel:

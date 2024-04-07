@@ -7,32 +7,51 @@ from pydantic import BeforeValidator
 
 from .Config import config
 
-_logger = logging.getLogger(__name__)
-
 PyObjectId = Annotated[str, BeforeValidator(str)]
-DoctorCollection = motor.motor_asyncio.AsyncIOMotorCollection
-EcdCollection = motor.motor_asyncio.AsyncIOMotorCollection
+
+
+class DoctorCollection(motor.motor_asyncio.AsyncIOMotorCollection):
+    pass
+
+
+class EcdCollection(motor.motor_asyncio.AsyncIOMotorCollection):
+    pass
+
+
+class PatientCollection(motor.motor_asyncio.AsyncIOMotorCollection):
+    pass
 
 
 class DbCollections:
-    def __init__(self, doctor_collection: DoctorCollection, ecd_collection: EcdCollection):
+    def __init__(
+            self,
+            doctor_collection,
+            ecd_collection,
+            patient_collection
+    ):
         self.doctor_collection: DoctorCollection = doctor_collection
         self.ecd_collection: EcdCollection = ecd_collection
+        self.patient_collection: PatientCollection = patient_collection
 
 
-async def init_db() -> DbCollections:
+def init_db() -> DbCollections:
     client = motor.motor_asyncio.AsyncIOMotorClient(config.db_url)
+    print('x')
     database = client.get_database('ecdHelperDB')
     return DbCollections(
         database.get_collection('doctor'),
-        database.get_collection('ecd')
+        database.get_collection('ecd'),
+        database.get_collection('patient')
     )
 
 
-async def get_doctor_collection(db: DbCollections = Depends(init_db)) -> DoctorCollection:
+def get_doctor_collection(db: DbCollections = Depends(init_db)) -> DoctorCollection:
     return db.doctor_collection
 
 
-async def get_ecd_collection(db: DbCollections = Depends(init_db)) -> EcdCollection:
+def get_ecd_collection(db: DbCollections = Depends(init_db)) -> EcdCollection:
     return db.ecd_collection
 
+
+def get_patient_collection(db: DbCollections = Depends(init_db)) -> PatientCollection:
+    return db.patient_collection
