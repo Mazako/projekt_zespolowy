@@ -1,0 +1,10 @@
+fastapi[all]
+pydantic[email]
+python-multipart
+motor
+numpy
+scipy
+pytest
+pytest-asyncio
+testcontainers
+mongomock
