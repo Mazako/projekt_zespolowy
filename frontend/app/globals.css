@@ -1,0 +1,24 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rootLayout {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+
+.content {
+  background-color: white;
+  flex: 1;
+  padding: 1rem;
+  color: black;
+}
