@@ -5,7 +5,7 @@ from bson import ObjectId
 from fastapi import HTTPException
 
 from ..database import PyObjectId, EcdCollection
-from ..model.ecd import EcdModel, EcdIdFilename, SignalType, Signal
+from ..model.ecd import EcdModel, EcdIdFilename, SignalType, Signal, SignalResponse
 from ..utils.ecd_signal_utils import import_mat, convert_to_float_second, get_signal_time
 
 
@@ -37,7 +37,7 @@ class EcdService:
                 for r in list(await result.to_list(None))]
 
     async def get_signal_data(self, ecd_id: PyObjectId, signal_type: SignalType, start_time: time = None,
-                              end_time: time = None):
+                              end_time: time = None) -> SignalResponse:
         result = await self.ecd_collection.find_one(
             filter={
                 '_id': ObjectId(ecd_id)
@@ -61,4 +61,4 @@ class EcdService:
             end_range = int(convert_to_float_second(end_time) * frequency)
             data = data[start_range: min(len(data), end_range + 1)]
 
-        return Signal(data=data)
+        return SignalResponse(data=data, frequency=frequency)

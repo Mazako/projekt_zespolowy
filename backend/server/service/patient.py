@@ -3,7 +3,7 @@ from typing import Optional, BinaryIO
 from bson import ObjectId
 
 from server.database import PatientCollection, PyObjectId
-from server.model.patient import PatientBaseModel, PatientModel, PatientEcdModel
+from server.model.patient import PatientBaseModel, PatientEcdModel
 from server.service.ecd import EcdService
 
 
@@ -37,4 +37,3 @@ class PatientService:
             }
         )
         return ecd_id
-

@@ -49,3 +49,7 @@ class SignalType(str, Enum):
     I = 'I'
     II = 'II'
     III = 'III'
+
+
+class SignalResponse(Signal):
+    frequency: int
