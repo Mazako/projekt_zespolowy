@@ -1,4 +1,5 @@
 import logging
+import sys
 from typing import Annotated
 
 import motor.motor_asyncio
@@ -36,7 +37,6 @@ class DbCollections:
 
 def init_db() -> DbCollections:
     client = motor.motor_asyncio.AsyncIOMotorClient(config.db_url)
-    print('x')
     database = client.get_database('ecdHelperDB')
     return DbCollections(
         database.get_collection('doctor'),
@@ -55,3 +55,14 @@ def get_ecd_collection(db: DbCollections = Depends(init_db)) -> EcdCollection:
 
 def get_patient_collection(db: DbCollections = Depends(init_db)) -> PatientCollection:
     return db.patient_collection
+
+async def check_db_connection():
+    client = motor.motor_asyncio.AsyncIOMotorClient(config.db_url)
+    print('Checking database connection...')
+    try:
+        await client.list_database_names()
+        print('Database connected succesfully')
+    except Exception as e:
+        print('Cannot connect to database. check DB connection. Stacktrace:')
+        print(e)
+        sys.exit(1)
