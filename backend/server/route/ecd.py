@@ -22,6 +22,10 @@ async def upload_ecd(
     _id = await ecd_service.save_ecd_file(hea.file, mat.file)
     return {'id: ': _id}
 
+@ecd_router.get('/ping')
+async def get_ping():
+    return {'id': '10'}
+
 
 @ecd_router.get('/allFiles', response_model_by_alias=False)
 async def get_all_files(ecd_service: EcdService = Depends(get_ecd_service)):
