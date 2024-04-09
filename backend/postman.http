@@ -11,3 +11,11 @@ Content-Disposition: form-data; name="mat"; filename="JS00001.mat"
 
 < ../ecd_sandbox/files/JS00001.mat
 --boundary
+
+###
+
+GET http://localhost:8000/ecd/allFiles
+
+###
+
+GET http://localhost:8000/ecd/signal?ecd_id=661582caa4b29998232a8d74&signal_type=I&start=00:00:00.002&end=00:00:00.004
