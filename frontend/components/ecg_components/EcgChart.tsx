@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import Chart from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
-const EKGChart: React.FC = () => {
+const EKGChart: FC = () => {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const [dataX, setDataX] = useState<number[]>([]);
     const [dataY, setDataY] = useState<number[]>([]);
