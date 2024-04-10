@@ -3,15 +3,16 @@ from typing import BinaryIO, Optional
 
 from bson import ObjectId
 from fastapi import HTTPException
+from motor import motor_asyncio
 
-from ..database import PyObjectId, EcdCollection
-from ..model.ecd import EcdModel, EcdIdFilename, SignalType, Signal, SignalResponse
+from ..database import PyObjectId
+from ..model.ecd import EcdModel, EcdIdFilename, SignalType, SignalResponse
 from ..utils.ecd_signal_utils import import_mat, convert_to_float_second, get_signal_time
 
 
 class EcdService:
-    def __init__(self, ecd_collection: EcdCollection):
-        self.ecd_collection: EcdCollection = ecd_collection
+    def __init__(self, ecd_collection: motor_asyncio.AsyncIOMotorCollection):
+        self.ecd_collection: motor_asyncio.AsyncIOMotorCollection = ecd_collection
 
     async def save_ecd_file(self, hea: BinaryIO, mat: BinaryIO) -> PyObjectId:
         ecd = import_mat(hea, mat)

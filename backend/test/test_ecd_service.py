@@ -2,12 +2,11 @@ import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from server.Config import config
-from server.database import EcdCollection
 from server.service.ecd import EcdService
 
 
 def create_collection() -> EcdService:
-    collection: EcdCollection = AsyncIOMotorClient(config.db_url) \
+    collection = AsyncIOMotorClient(config.db_url) \
         .get_database('ecdHelperDB') \
         .get_collection('ecd')
 

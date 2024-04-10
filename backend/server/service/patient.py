@@ -1,15 +1,16 @@
 from typing import Optional, BinaryIO
 
 from bson import ObjectId
+from motor import motor_asyncio
 
-from server.database import PatientCollection, PyObjectId
+from server.database import PyObjectId
 from server.model.patient import PatientBaseModel, PatientEcdModel
 from server.service.ecd import EcdService
 
 
 class PatientService:
-    def __init__(self, patient_collection: PatientCollection, ecd_service: EcdService):
-        self.patient_collection: PatientCollection = patient_collection
+    def __init__(self, patient_collection: motor_asyncio.AsyncIOMotorCollection, ecd_service: EcdService):
+        self.patient_collection: motor_asyncio.AsyncIOMotorCollection = patient_collection
         self.ecd_service: EcdService = ecd_service
 
     async def add_patient(self, patient: PatientBaseModel) -> PyObjectId:

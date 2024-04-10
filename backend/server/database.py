@@ -1,9 +1,9 @@
-import logging
 import sys
 from typing import Annotated
 
 import motor.motor_asyncio
 from fastapi import Depends
+from motor import motor_asyncio
 from pydantic import BeforeValidator
 
 from .Config import config
@@ -11,50 +11,39 @@ from .Config import config
 PyObjectId = Annotated[str, BeforeValidator(str)]
 
 
-class DoctorCollection(motor.motor_asyncio.AsyncIOMotorCollection):
-    pass
+class DbSession:
+    client: motor_asyncio.AsyncIOMotorClient
+    doctor_collection: motor_asyncio.AsyncIOMotorCollection
+    ecd_collection: motor_asyncio.AsyncIOMotorCollection
+    patient_collection: motor_asyncio.AsyncIOMotorCollection
+    __instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super(DbSession, cls).__new__(cls)
+            cls.__instance.client = motor_asyncio.AsyncIOMotorClient(config.db_url)
+            db = cls.__instance.client.get_database('ecdHelperDB')
+            cls.__instance.doctor_collection = db.get_collection('doctor')
+            cls.__instance.ecd_collection = db.get_collection('ecd')
+            cls.__instance.patient_collection = db.get_collection('patient')
+        return cls.__instance
 
 
-class EcdCollection(motor.motor_asyncio.AsyncIOMotorCollection):
-    pass
+def init_db() -> DbSession:
+    return DbSession()
 
 
-class PatientCollection(motor.motor_asyncio.AsyncIOMotorCollection):
-    pass
-
-
-class DbCollections:
-    def __init__(
-            self,
-            doctor_collection,
-            ecd_collection,
-            patient_collection
-    ):
-        self.doctor_collection: DoctorCollection = doctor_collection
-        self.ecd_collection: EcdCollection = ecd_collection
-        self.patient_collection: PatientCollection = patient_collection
-
-
-def init_db() -> DbCollections:
-    client = motor.motor_asyncio.AsyncIOMotorClient(config.db_url)
-    database = client.get_database('ecdHelperDB')
-    return DbCollections(
-        database.get_collection('doctor'),
-        database.get_collection('ecd'),
-        database.get_collection('patient')
-    )
-
-
-def get_doctor_collection(db: DbCollections = Depends(init_db)) -> DoctorCollection:
+def get_doctor_collection(db: DbSession = Depends(init_db)) -> motor_asyncio.AsyncIOMotorCollection:
     return db.doctor_collection
 
 
-def get_ecd_collection(db: DbCollections = Depends(init_db)) -> EcdCollection:
+def get_ecd_collection(db: DbSession = Depends(init_db)) -> motor_asyncio.AsyncIOMotorCollection:
     return db.ecd_collection
 
 
-def get_patient_collection(db: DbCollections = Depends(init_db)) -> PatientCollection:
+def get_patient_collection(db: DbSession = Depends(init_db)) -> motor_asyncio.AsyncIOMotorCollection:
     return db.patient_collection
+
 
 async def check_db_connection():
     client = motor.motor_asyncio.AsyncIOMotorClient(config.db_url)
