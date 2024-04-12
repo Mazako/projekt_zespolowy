@@ -2,14 +2,14 @@ POST http://localhost:8000/ecd/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="hea"; filename="JS00001.hea"
+Content-Disposition: form-data; name="hea"; filename="JS00005.hea"
 
-< ../ecd_sandbox/files/JS00001.hea
+< ../ecd_sandbox/files/JS00005.hea
 
 --boundary
-Content-Disposition: form-data; name="mat"; filename="JS00001.mat"
+Content-Disposition: form-data; name="mat"; filename="JS00005.mat"
 
-< ../ecd_sandbox/files/JS00001.mat
+< ../ecd_sandbox/files/JS00005.mat
 --boundary
 
 ###

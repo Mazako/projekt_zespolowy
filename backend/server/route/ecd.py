@@ -4,11 +4,11 @@ from typing import Annotated
 from fastapi import APIRouter, UploadFile, Depends, Query
 from fastapi.encoders import jsonable_encoder
 
-from server.database import PyObjectId
-from server.model.ecd import SignalType
-from server.service.dependency import get_ecd_service, get_patient_service
-from server.service.ecd import EcdService
-from server.service.patient import PatientService
+from backend.server.database import PyObjectId
+from backend.server.model.ecd import SignalType
+from backend.server.service.dependency import get_ecd_service, get_patient_service
+from backend.server.service.ecd import EcdService
+from backend.server.service.patient import PatientService
 
 ecd_router = APIRouter(prefix='/ecd')
 

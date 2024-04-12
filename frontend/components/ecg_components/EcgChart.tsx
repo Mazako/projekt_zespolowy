@@ -2,26 +2,27 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import Chart from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 
-const EKGChart: FC = () => {
+const EKGChart: FC<{ fileId?: string }> = ({ fileId }) => {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const [dataX, setDataX] = useState<number[]>([]);
     const [dataY, setDataY] = useState<number[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("/api/ecd");
-            const json = await response.json();
+        if (fileId) {
+            const fetchData = async () => {
+                const signalType = 'I';
+                const response = await fetch(`/api/ecd?fileId=${fileId}&signal_type=${signalType}`);
+                const json = await response.json();
 
-            const period = 1 / json.frequency;
-            const generatedDataX = Array.from({length: json.data.length}, (_, index) => period * index);
+                const period = 1 / json.frequency;
+                const generatedDataX = Array.from({length: json.data.length}, (_, index) => period * index);
 
-            setDataY(json.data);
-            setDataX(generatedDataX);
-
-        };
-        fetchData();
-    }, []);
-
+                setDataY(json.data);
+                setDataX(generatedDataX);
+            };
+            fetchData();
+        }
+    }, [fileId]);
 
     useEffect(() => {
         let chartInstance: Chart | null = null;
