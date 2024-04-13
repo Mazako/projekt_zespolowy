@@ -2,7 +2,7 @@ import logging
 
 from fastapi import FastAPI
 
-from backend.server.route.ecd import ecd_router
+from server.route.ecd import ecd_router
 
 logging.basicConfig(level=logging.INFO)
 

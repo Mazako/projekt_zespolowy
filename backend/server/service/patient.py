@@ -3,9 +3,9 @@ from typing import Optional, BinaryIO
 from bson import ObjectId
 from motor import motor_asyncio
 
-from backend.server.database import PyObjectId
-from backend.server.model.patient import PatientBaseModel, PatientEcdModel
-from backend.server.service.ecd import EcdService
+from server.database import PyObjectId
+from server.model.patient import PatientBaseModel, PatientEcdModel
+from server.service.ecd import EcdService
 
 
 class PatientService:

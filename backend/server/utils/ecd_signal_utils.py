@@ -4,7 +4,7 @@ from typing import BinaryIO
 
 import scipy
 
-from backend.server.model.ecd import EcdModel, Signal
+from server.model.ecd import EcdModel, Signal
 
 
 def import_mat(hea_file: BinaryIO, mat_file: BinaryIO) -> EcdModel:

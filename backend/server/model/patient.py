@@ -4,7 +4,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-from backend.server.database import PyObjectId
+from server.database import PyObjectId
 
 
 class Gender(str, Enum):

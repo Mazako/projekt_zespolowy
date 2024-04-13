@@ -1,50 +1,37 @@
-'use client'
-import React, {useEffect, useState} from 'react';
-import {Button, Dropdown} from 'react-bootstrap';
-import {FileDetails} from "@/ResponseBody/EcgFiles";
+import React, { useEffect, useState } from 'react';
+import { Button, Dropdown } from 'react-bootstrap';
+import { FileDetails } from "@/ResponseBody/EcgFiles";
 
-const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string) => void }) => {
-
+const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalType: string) => void }) => {
     const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
     const [selectedSignalType, setSelectedSignalType] = useState('');
 
     const [files, setFiles] = useState<FileDetails[]>([]);
 
-
     useEffect(() => {
-        async function fetchFiles(){
+        async function fetchFiles() {
             const response = await fetch("/api/getAllEcd")
-            if (response.ok){
+            if (response.ok) {
                 const data = await response.json();
-                console.log(data);
-                const ecgFiles = data.map((item: any) =>{
-                    return {
-                        _id: item._id || '',
-                        filename: item.filename || 'Unknown',
-                        length: item.length || '00:00:00',
-                    };
-                })
+                const ecgFiles = data.map((item: any) => ({
+                    _id: item._id || '',
+                    filename: item.filename || 'Unknown',
+                    length: item.length || '00:00:00',
+                }));
                 setFiles(ecgFiles);
-            }else{
-                console.error("Failed to fetch files")
+            } else {
+                console.error("Failed to fetch files");
             }
         }
         fetchFiles();
     }, []);
 
-    const handleFileSelect = (file: FileDetails) => {
-        setSelectedFile(file);
-    };
-
-
-    const handleSignalTypeSelect = (signalType: string): void => {
-        setSelectedSignalType(signalType);
-    };
-
     const handleSubmit = () => {
-        console.log('ID:', selectedFile?._id);
-        console.log('Type:', selectedSignalType);
+        if (selectedFile && selectedSignalType) {
+            onSelectFile(selectedFile._id, selectedSignalType);
+        }
     };
+
     return (
         <div className="d-flex align-items-start">
             <Dropdown className="me-2">
@@ -53,7 +40,7 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string) => void
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     {files.map(file => (
-                        <Dropdown.Item key={file._id} onClick={() => onSelectFile(file._id)}>
+                        <Dropdown.Item key={file._id} onClick={() => setSelectedFile(file)}>
                             {file.filename}
                         </Dropdown.Item>
                     ))}
@@ -65,8 +52,8 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string) => void
                     {selectedSignalType || 'Wybierz sygnał'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleSignalTypeSelect('I')}>I</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSignalTypeSelect('II')}>II</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('I')}>I</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('II')}>II</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
 
@@ -76,6 +63,4 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string) => void
         </div>
     );
 };
-
-
 export default UploadButton;

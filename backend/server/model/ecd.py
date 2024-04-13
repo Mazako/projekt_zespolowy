@@ -5,7 +5,7 @@ from typing import Annotated
 import numpy as np
 from pydantic import BaseModel, Field
 
-from backend.server.database import PyObjectId
+from server.database import PyObjectId
 
 
 class Annotations(BaseModel):
