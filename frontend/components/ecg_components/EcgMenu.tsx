@@ -1,5 +1,5 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Make sure Bootstrap CSS is imported
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const EcgMenu = () => {
     return (
