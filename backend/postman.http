@@ -18,4 +18,4 @@ GET http://localhost:8000/ecd/allFiles
 
 ###
 
-GET http://localhost:8000/ecd/signal?ecd_id=66159a8ebe6535a3f9a5f024&signal_type=I&start=00:00:00.002&end=00:00:00.004
+GET http://localhost:8000/ecd/signal?ecd_id=661d1c62f8412ab9eedda67c&signal_type=I

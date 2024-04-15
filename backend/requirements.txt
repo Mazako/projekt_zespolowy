@@ -8,3 +8,5 @@ pytest
 pytest-asyncio
 testcontainers
 mongomock
+neurokit2
+pandas

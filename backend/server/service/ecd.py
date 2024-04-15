@@ -46,7 +46,12 @@ class EcdService:
             projection={
                 '_id': 0,
                 'frequency': 1,
-                signal_type: 1
+                signal_type: 1,
+                'P': 1,
+                'Q': 1,
+                'R': 1,
+                'S': 1,
+                'T': 1,
             }
         )
 
@@ -54,12 +59,32 @@ class EcdService:
             raise HTTPException(status_code=404, detail='ECD not found')
 
         frequency = int(result['frequency'])
-        data = result[signal_type]['data']
+        signal = result[signal_type]
+        data = signal['data']
+
+        elements = {
+            'P': signal['P'],
+            'Q': signal['Q'],
+            'R': signal['R'],
+            'S': signal['S'],
+            'T': signal['T']
+        }
+
+        elements = {
+            k:
+            [get_signal_time(s, frequency) for s in v]
+            for (k, v) in elements.items()
+        }
 
         if start_time is not None and end_time is not None:
-            print(convert_to_float_second(start_time) * frequency, convert_to_float_second(end_time) * frequency)
             start_range = int(convert_to_float_second(start_time) * frequency)
             end_range = int(convert_to_float_second(end_time) * frequency)
+
+            elements = {
+                k:
+                list(filter(lambda x: start_time <= x <= end_time, v))
+                for (k, v) in elements.items()
+            }
             data = data[start_range: min(len(data), end_range + 1)]
 
-        return SignalResponse(data=data, frequency=frequency)
+        return SignalResponse(**elements, data=data, frequency=frequency)

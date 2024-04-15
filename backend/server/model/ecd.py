@@ -17,6 +17,11 @@ class Annotations(BaseModel):
 class Signal(BaseModel):
     data: list[float]
     annotations: list[str] | None = None
+    R: list[int] | None = None
+    P: list[int] | None = None
+    Q: list[int] | None = None
+    S: list[int] | None = None
+    T: list[int] | None = None
 
 
 class EcdModel(BaseModel):
@@ -53,3 +58,8 @@ class SignalType(str, Enum):
 
 class SignalResponse(Signal):
     frequency: int
+    R: list[time] | None = None
+    P: list[time] | None = None
+    Q: list[time] | None = None
+    S: list[time] | None = None
+    T: list[time] | None = None
