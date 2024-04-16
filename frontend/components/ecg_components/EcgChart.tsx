@@ -2,23 +2,39 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import Chart from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from "chartjs-plugin-annotation";
+import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/Interfaces/EcgFiles";
+import {createAnnotations, updateSettingsFromData} from "@/utilsTypeScript/ecdChart/chartUtils";
 
 
-type AnnotationBox = {
+export type LineAnnotation = {
+    type: 'line';
     xMin: number;
     xMax: number;
     yMin: number;
     yMax: number;
+    backgroundColor: string;
 };
 
-const EKGChart: FC<{ fileId?: string, signalType?: string }> = ({ fileId,signalType }) => {
+type BoxAnnotation = {
+    type: 'box';
+    xMin: number;
+    xMax: number;
+    yMin: number;
+    yMax: number;
+    backgroundColor: string;
+};
+
+type Annotation = LineAnnotation | BoxAnnotation;
+
+
+const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings }> = ({ fileId,signalType,settings }) => {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const [dataX, setDataX] = useState<number[]>([]);
     const [dataY, setDataY] = useState<number[]>([]);
-    const [annotations, setAnnotations] = useState<AnnotationBox[]>([]);
+    const [ecgData, setEcgData] = useState<EcgJsonData | null>(null);
+    const [annotations, setAnnotations] = useState<Annotation[]>([]);
     const dragStartRef = useRef<{ x: number; y: number } | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
-    const [zoomSettings, setZoomSettings] = useState<{ xMin: number; xMax: number } | null>(null);
 
     const handleMouseDown = (event: MouseEvent) => {
         console.log('Mouse down event occurred');
@@ -47,11 +63,13 @@ const EKGChart: FC<{ fileId?: string, signalType?: string }> = ({ fileId,signalT
             const yValue = chart.scales.y.getValueForPixel(y) ?? 0;
             console.log(xValue,yValue);
 
-            const newAnnotation: AnnotationBox = {
+            const newAnnotation: Annotation = {
+                type: 'box',
                 xMin: Math.min(dragStartRef.current.x, xValue),
                 xMax: Math.max(dragStartRef.current.x, xValue),
                 yMin: Math.min(dragStartRef.current.y, yValue),
-                yMax: Math.max(dragStartRef.current.y, yValue)
+                yMax: Math.max(dragStartRef.current.y, yValue),
+                backgroundColor: 'rgba(255, 99, 132, 0.25)',
             };
 
             setAnnotations(prevAnnotations => [...prevAnnotations, newAnnotation]);
@@ -74,13 +92,30 @@ const EKGChart: FC<{ fileId?: string, signalType?: string }> = ({ fileId,signalT
         }
     }, []);
 
+    useEffect(() => {
+        console.log("SETINGSY", settings);
+        console.log("data", ecgData);
+        if (ecgData && settings) {
+            settings = updateSettingsFromData(ecgData,settings);
+            console.log("PO ZMIANIE",settings);
+        }
+    }, [ecgData]);
+
+    useEffect(() => {
+        if (settings) {
+            const newAnnotations = createAnnotations(settings);
+            console.log("ANNOTACJE", annotations)
+            setAnnotations(newAnnotations);
+        }
+    }, [settings]);
+
 
     useEffect(() => {
         if (fileId) {
             const fetchData = async () => {
                 const response = await fetch(`/api/ecd?fileId=${fileId}&signal_type=${signalType}`);
                 const json = await response.json();
-
+                setEcgData(json);
                 const period = 1 / json.frequency;
                 const generatedDataX = Array.from({length: json.data.length}, (_, index) => period * index);
 
@@ -90,6 +125,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string }> = ({ fileId,signalT
             fetchData();
         }
     }, [fileId]);
+
 
     useEffect(() => {
         let chartInstance: Chart | null = null;
@@ -149,14 +185,16 @@ const EKGChart: FC<{ fileId?: string, signalType?: string }> = ({ fileId,signalT
                                 }
                             },
                             annotation: {
-                                annotations: annotations.map(ann => ({
-                                    type: 'box',
-                                    xMin: ann.xMin,
-                                    xMax: ann.xMax,
-                                    yMin: ann.yMin,
-                                    yMax: ann.yMax,
-                                    backgroundColor: 'rgba(255, 99, 132, 0.25)'
-                                }))
+                                annotations: annotations.map(ann => {
+                                        return {
+                                            type: ann.type,
+                                            xMin: ann.xMin,
+                                            xMax: ann.xMax,
+                                            yMin: ann.yMin,
+                                            yMax: ann.yMax,
+                                            backgroundColor: ann.backgroundColor,
+                                        };
+                                })
                             }
                         },
                         interaction: {
