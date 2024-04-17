@@ -3,7 +3,7 @@
 import EKGChart from "@/components/ecg_components/EcgChart";
 import UploadButton from "@/components/ecg_components/UploadButton";
 import {useEffect, useState} from "react";
-import {EcdSettings, FileDetails} from "@/utilsTypeScript/Interfaces/EcgFiles";
+import {EcdSettings, FileDetails} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import EcgMenu from "@/components/ecg_components/EcgMenu";
 const EcgPage =  () => {
 
@@ -15,11 +15,6 @@ const EcgPage =  () => {
         setSelectedFileId(fileId);
         setSelectedSignalType(signalType);
     };
-
-    useEffect(() => {
-        console.log(selectedFileId, selectedSignalType);
-        console.log(ecdSettings);
-    }, [selectedFileId, selectedSignalType,ecdSettings]);
 
     return (
         <div className="container-fluid h-100">

@@ -2,32 +2,13 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import Chart from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from "chartjs-plugin-annotation";
-import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/Interfaces/EcgFiles";
-import {createAnnotations, updateSettingsFromData} from "@/utilsTypeScript/ecdChart/chartUtils";
-
-
-export type LineAnnotation = {
-    type: 'line';
-    xMin: number;
-    xMax: number;
-    yMin: number;
-    yMax: number;
-    backgroundColor: string;
-};
-
-type BoxAnnotation = {
-    type: 'box';
-    xMin: number;
-    xMax: number;
-    yMin: number;
-    yMax: number;
-    backgroundColor: string;
-};
-
-type Annotation = LineAnnotation | BoxAnnotation;
+import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
+import {createAnnotations} from "@/utilsTypeScript/ecdChart/chartUtils";
+import {Annotation} from "@/utilsTypeScript/ecdChart/types/annotations";
 
 
 const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings }> = ({ fileId,signalType,settings }) => {
+
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const [dataX, setDataX] = useState<number[]>([]);
     const [dataY, setDataY] = useState<number[]>([]);
@@ -37,9 +18,9 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
     const chartInstanceRef = useRef<Chart | null>(null);
 
     const handleMouseDown = (event: MouseEvent) => {
-        console.log('Mouse down event occurred');
+        if (event.button !== 2) return;
+
         const chart = chartInstanceRef.current;
-        console.log(chart);
         if (chart && chartRef.current) {
             const rect = chartRef.current.getBoundingClientRect();
             const x = event.clientX - rect.left;
@@ -47,12 +28,13 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
 
             const xValue = chart.scales.x.getValueForPixel(x) ?? 0;
             const yValue = chart.scales.y.getValueForPixel(y) ?? 0;
-            console.log(xValue,yValue);
-
             dragStartRef.current = { x: xValue, y: yValue };
         }
     };
+
     const handleMouseUp = (event: MouseEvent) => {
+        if (event.button !== 2) return;
+
         const chart = chartInstanceRef.current;
         if (chart && dragStartRef.current && chartRef.current) {
             const rect = chartRef.current.getBoundingClientRect();
@@ -61,7 +43,6 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
 
             const xValue = chart.scales.x.getValueForPixel(x) ?? 0;
             const yValue = chart.scales.y.getValueForPixel(y) ?? 0;
-            console.log(xValue,yValue);
 
             const newAnnotation: Annotation = {
                 type: 'box',
@@ -69,6 +50,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                 xMax: Math.max(dragStartRef.current.x, xValue),
                 yMin: Math.min(dragStartRef.current.y, yValue),
                 yMax: Math.max(dragStartRef.current.y, yValue),
+                borderColor: 'rgba(0,0,0)',
                 backgroundColor: 'rgba(255, 99, 132, 0.25)',
             };
 
@@ -83,32 +65,19 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
             const canvas = chartRef.current;
             canvas.addEventListener('mousedown', handleMouseDown);
             canvas.addEventListener('mouseup', handleMouseUp);
-
             return () => {
                 canvas.removeEventListener('mousedown', handleMouseDown);
                 canvas.removeEventListener('mouseup', handleMouseUp);
-
             };
         }
     }, []);
 
     useEffect(() => {
-        console.log("SETINGSY", settings);
-        console.log("data", ecgData);
-        if (ecgData && settings) {
-            settings = updateSettingsFromData(ecgData,settings);
-            console.log("PO ZMIANIE",settings);
-        }
-    }, [ecgData]);
-
-    useEffect(() => {
-        if (settings) {
-            const newAnnotations = createAnnotations(settings);
-            console.log("ANNOTACJE", annotations)
+        if (settings && ecgData) {
+            const newAnnotations = createAnnotations(settings,ecgData);
             setAnnotations(newAnnotations);
         }
     }, [settings]);
-
 
     useEffect(() => {
         if (fileId) {
@@ -126,16 +95,13 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
         }
     }, [fileId]);
 
-
     useEffect(() => {
         let chartInstance: Chart | null = null;
-
         if (chartRef.current) {
             const ctx = chartRef.current.getContext('2d');
             if (ctx) {
                 Chart.register(zoomPlugin);
                 Chart.register(annotationPlugin);
-
                 chartInstance = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -192,6 +158,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                                             xMax: ann.xMax,
                                             yMin: ann.yMin,
                                             yMax: ann.yMax,
+                                            borderColor: ann.backgroundColor,
                                             backgroundColor: ann.backgroundColor,
                                         };
                                 })
@@ -203,7 +170,6 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                             axis: 'x'
                         }
                     }
-
                 });
                 chartInstanceRef.current = chartInstance;
             }
@@ -215,7 +181,6 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
             }
         };
     }, [dataX, dataY,annotations]);
-
     return <canvas ref={chartRef} />;
 };
 

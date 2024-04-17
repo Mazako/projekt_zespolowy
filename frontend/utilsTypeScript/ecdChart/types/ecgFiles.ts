@@ -17,15 +17,10 @@ export interface EcgJsonData {
 
 export interface EcdSettings {
     showP: boolean;
-    pPosition?: number[];
     showQ: boolean;
-    qPosition?: number[];
     showR: boolean;
-    rPosition?: number[];
     showS: boolean;
-    sPosition?: number[];
     showT: boolean;
-    tPosition?: number[];
 }
 
 

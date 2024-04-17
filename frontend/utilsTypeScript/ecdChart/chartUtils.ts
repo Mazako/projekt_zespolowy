@@ -1,63 +1,46 @@
-// utils/chartUtils.ts
+import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
+import {LineAnnotation} from "@/utilsTypeScript/ecdChart/types/annotations";
 
-import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/Interfaces/EcgFiles";
-import {LineAnnotation} from "@/components/ecg_components/EcgChart";
-
-
-export const updateSettingsFromData = (data: EcgJsonData, currentSettings: EcdSettings): EcdSettings => {
-    console.log("Data",data.P?.map(convertToPosition));
-    return  {
-        ...currentSettings,
-        showP: currentSettings.showP,
-        pPosition: data.P?.map(convertToPosition) ??[],
-        showQ: currentSettings.showQ,
-        qPosition: data.Q?.map(convertToPosition)??[],
-        showR: currentSettings.showR,
-        rPosition: data.R?.map(convertToPosition)??[],
-        showS: currentSettings.showS,
-        sPosition: data.S?.map(convertToPosition)??[],
-        showT: currentSettings.showT,
-        tPosition: data.T?.map(convertToPosition)??[],
-    };
-};
 
 const convertToPosition = (timeStr: string) => {
-    console.log(timeStr);
-    const [hours, minutes, seconds] = timeStr.split(':').map(parseFloat);
+    const parts = timeStr.split(':');
+    const hours = parseFloat(parts[0]);
+    const minutes = parseFloat(parts[1]);
+    const seconds = parseFloat(parts[2]);
     return hours * 3600 + minutes * 60 + seconds;
 };
 
-
-export function createAnnotations(settings?: EcdSettings): LineAnnotation[] {
+export function createAnnotations(settings?: EcdSettings, ecdData?: EcgJsonData): LineAnnotation[] {
     const annotations: LineAnnotation[] = [];
-    console.log("Anotacje w seting", settings);
     if (settings) {
         const addAnnotation = (pos: number, color: string) => {
             annotations.push({
                 type: 'line',
                 xMin: pos,
                 xMax: pos,
-                yMin: -0.3,
-                yMax: 0.3,
-                backgroundColor: color
+                yMin: -0.6,
+                yMax: 0.6,
+                backgroundColor: color,
+                borderColor: color
             });
         };
 
-        if (settings.showP && settings.pPosition) {
-            settings.pPosition.forEach(pos => addAnnotation(pos, 'red'));
+        if (settings.showP && ecdData?.P) {
+            ecdData.P.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(255, 0, 0)'));
         }
-        if (settings.showQ && settings.qPosition) {
-            settings.qPosition.forEach(pos => addAnnotation(pos, 'yellow'));
+        if (settings.showQ && ecdData?.Q) {
+            ecdData.Q.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(255, 165, 0)'));
         }
-        if (settings.showR && settings.rPosition) {
-            settings.rPosition.forEach(pos => addAnnotation(pos, 'blue'));
+        if (settings.showR && ecdData?.R) {
+            ecdData.R.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(0, 0, 255)'));
         }
-        if (settings.showS && settings.sPosition) {
-            settings.sPosition.forEach(pos => addAnnotation(pos, 'gray'));
+        if (settings.showS && ecdData?.S) {
+            ecdData.S.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(0, 0, 0)'));
         }
-        if (settings.showT && settings.tPosition) {
-            settings.tPosition.forEach(pos => addAnnotation(pos, 'green'));
+        if (settings.showT && ecdData?.T) {
+            ecdData.T.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(60, 179, 113)'));
         }
     }
     return annotations;
 }
+

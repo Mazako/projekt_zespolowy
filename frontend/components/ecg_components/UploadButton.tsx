@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
-import { FileDetails } from "@/utilsTypeScript/Interfaces/EcgFiles";
+import { FileDetails } from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 
 const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalType: string) => void }) => {
     const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);

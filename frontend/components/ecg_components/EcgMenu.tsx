@@ -1,7 +1,7 @@
 'use client'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from "react";
-import {EcgMenuProps} from "@/utilsTypeScript/Interfaces/EcgFiles";
+import {EcgMenuProps} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 
 
 
