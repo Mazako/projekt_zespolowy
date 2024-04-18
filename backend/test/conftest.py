@@ -1,7 +1,7 @@
 import pytest
 from testcontainers.mongodb import MongoDbContainer
 
-from server.Config import config
+from backend.server.Config import config
 
 
 @pytest.fixture(autouse=True, scope='session')
