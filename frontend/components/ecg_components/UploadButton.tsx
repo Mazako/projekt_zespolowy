@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { FileDetails } from "@/utilsTypeScript/ecdChart/types/ecgFiles";
+import {GET} from "@/utilsTypeScript/getAllFilesRequest";
 
 const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalType: string) => void }) => {
     const [selectedFile, setSelectedFile] = useState<FileDetails | null>(null);
@@ -10,7 +11,7 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalT
 
     useEffect(() => {
         async function fetchFiles() {
-            const response = await fetch("/api/getAllEcd")
+            const response = await GET();
             if (response.ok) {
                 const data = await response.json();
                 const ecgFiles = data.map((item: any) => ({

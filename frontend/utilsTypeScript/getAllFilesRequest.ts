@@ -1,5 +1,6 @@
-export async function GET(){
-    const response = await fetch('http://localhost:8000/ecd/allFiles', {
+export async function GET() {
+    console.log(process.env.BACKEND_URL)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ecd/allFiles`, {
         cache: 'no-store',
     });
     if (!response.ok) {

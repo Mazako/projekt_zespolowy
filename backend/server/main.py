@@ -1,7 +1,7 @@
 import uvicorn
 import asyncio
 
-from backend.server.database import check_db_connection
+from server.database import check_db_connection
 
 if __name__ == '__main__':
     asyncio.run(check_db_connection())

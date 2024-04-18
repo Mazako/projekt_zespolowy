@@ -5,7 +5,6 @@ from EcdData import EcdData
 
 def import_mat(hea_file_path, mat_file_path):
     mat = scipy.io.loadmat(mat_file_path)['val']
-    scipy.io.loadmat()
     with open(hea_file_path, 'r') as header:
         line = header.readline()
         frequency = int(line.split(' ')[2])

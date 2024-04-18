@@ -1,8 +1,8 @@
 import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from backend.server.Config import config
-from backend.server.service.ecd import EcdService
+from server.Config import config
+from server.service.ecd import EcdService
 
 
 def create_collection() -> EcdService:
