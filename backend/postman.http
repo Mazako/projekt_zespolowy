@@ -14,7 +14,7 @@ Content-Disposition: form-data; name="mat"; filename="JS00005.mat"
 
 ###
 
-GET http://localhost:8000/ecd/allFiles
+GET http://879f9f33fd0d.ngrok.app/ecd/allFiles
 
 ###
 

@@ -1,5 +1,5 @@
 class Config:
     db_url = 'mongodb://admin:admin@localhost:27017'
-    frontend_url = 'http://localhost:3000'
+    frontend_url = 'http:localhost:3000'
 
 config = Config()
