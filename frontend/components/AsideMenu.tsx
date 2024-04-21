@@ -17,6 +17,9 @@ const AsideMenu = () => {
                     <li>
                         <Link href="/profil"  className="nav-link">Profil </Link>
                     </li>
+                    <li>
+                        <Link href="/sendEcd"  className="nav-link">Wysyłanie sygnałów</Link>
+                    </li>
                 </ul>
             </nav>
             <p>Lekarz Doktor</p> {}
