@@ -9,6 +9,18 @@
     position: relative;
 }
 
+.hover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #94b4f1;
+    width: 400px;
+    height: 400px;
+    position: relative;
+
+}
+
 .spacer {
     position: absolute;
     bottom: 0;
