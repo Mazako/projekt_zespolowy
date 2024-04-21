@@ -14,7 +14,9 @@ class EcdService:
     def __init__(self, ecd_collection: motor_asyncio.AsyncIOMotorCollection):
         self.ecd_collection: motor_asyncio.AsyncIOMotorCollection = ecd_collection
 
-    async def save_ecd_file(self, hea: BinaryIO, mat: BinaryIO) -> PyObjectId:
+    async def save_ecd_file(self, hea: BinaryIO, mat: BinaryIO, max_files: int) -> PyObjectId:
+        if await self.get_ecd_size() >= max_files:
+            raise HTTPException(400)
         ecd = import_mat(hea, mat)
         result = await self.ecd_collection.insert_one(ecd.model_dump(by_alias=True, exclude_unset=True))
         return PyObjectId(result.inserted_id)
@@ -88,3 +90,6 @@ class EcdService:
             data = data[start_range: min(len(data), end_range + 1)]
 
         return SignalResponse(**elements, data=data, frequency=frequency)
+
+    async def get_ecd_size(self) -> int:
+        return await self.ecd_collection.count_documents({})

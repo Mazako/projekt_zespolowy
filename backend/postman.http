@@ -19,3 +19,7 @@ GET http://879f9f33fd0d.ngrok.app/ecd/allFiles
 ###
 
 GET http://localhost:8000/ecd/signal?ecd_id=661e482f456229e631b7a6d2&signal_type=I
+
+###
+
+GET http://localhost:8000/ecd/size

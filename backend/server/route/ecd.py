@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import time
 from typing import Annotated
 
 from fastapi import APIRouter, UploadFile, Depends, Query
@@ -6,9 +6,9 @@ from fastapi.encoders import jsonable_encoder
 
 from server.database import PyObjectId
 from server.model.ecd import SignalType
-from server.service.dependency import get_ecd_service, get_patient_service
+from server.service.dependency import get_ecd_service
 from server.service.ecd import EcdService
-from server.service.patient import PatientService
+from server.Config import config
 
 ecd_router = APIRouter(prefix='/ecd')
 
@@ -19,8 +19,9 @@ async def upload_ecd(
         mat: UploadFile,
         ecd_service: EcdService = Depends(get_ecd_service)
 ):
-    _id = await ecd_service.save_ecd_file(hea.file, mat.file)
+    _id = await ecd_service.save_ecd_file(hea.file, mat.file, config.max_ecd)
     return {'id: ': _id}
+
 
 @ecd_router.get('/ping')
 async def get_ping():
@@ -41,3 +42,8 @@ async def get_signal(
         ecd_service: EcdService = Depends(get_ecd_service),
 ):
     return await ecd_service.get_signal_data(ecd_id, signal_type, start, end)
+
+
+@ecd_router.get('/size')
+async def ecd_size(ecd_service: EcdService = Depends(get_ecd_service)):
+    return await ecd_service.get_ecd_size()

@@ -1,0 +1,21 @@
+.fc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #3B71CA;
+    width: 400px;
+    height: 400px;
+    position: relative;
+}
+
+.spacer {
+    position: absolute;
+    bottom: 0;
+    color: #3B71CA
+}
+
+.fc:hover {
+    border: 1px dashed #94b4f1;
+    cursor: pointer;
+}
