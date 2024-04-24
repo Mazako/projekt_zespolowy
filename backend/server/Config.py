@@ -1,6 +1,6 @@
 class Config:
-    db_url = 'mongodb://admin:admin@localhost:27017'
-    frontend_url = 'http:localhost:3000'
+    db_url = 'mongodb://mongo:jGWFvUTfpdmTjjchsgmwarJRjrDidUSU@mongodb.railway.internal:27017'
+    frontend_url = 'http://projekt_zespolowy.railway.internal'
     max_ecd = 20
 
 config = Config()
