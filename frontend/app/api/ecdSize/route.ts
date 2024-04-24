@@ -1,4 +1,5 @@
 import {NextResponse} from "next/server";
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ecd/size`, {

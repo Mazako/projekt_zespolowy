@@ -1,3 +1,6 @@
+import {NextResponse} from "next/server";
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ecd/allFiles`, {
         cache: 'no-cache',
@@ -7,5 +10,5 @@ export async function GET() {
         throw new Error('Failed to fetch files');
     }
     const json = await response.json();
-    return Response.json(json);
+    return NextResponse.json(json);
 }

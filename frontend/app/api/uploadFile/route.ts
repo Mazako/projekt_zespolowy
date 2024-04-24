@@ -1,4 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ecd/upload`, {

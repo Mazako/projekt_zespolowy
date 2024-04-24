@@ -47,3 +47,8 @@ async def get_signal(
 @ecd_router.get('/size')
 async def ecd_size(ecd_service: EcdService = Depends(get_ecd_service)):
     return await ecd_service.get_ecd_size()
+
+
+@ecd_router.get('/prune')
+async def prune(ecd_service: EcdService = Depends(get_ecd_service)):
+    await ecd_service.prune()

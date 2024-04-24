@@ -93,3 +93,6 @@ class EcdService:
 
     async def get_ecd_size(self) -> int:
         return await self.ecd_collection.count_documents({})
+
+    async def prune(self) -> None:
+        await self.ecd_collection.delete_many({})

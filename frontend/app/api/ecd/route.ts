@@ -1,4 +1,5 @@
-import {NextRequest} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
     const url = new URL(req.url);
@@ -15,5 +16,6 @@ export async function GET(req: NextRequest) {
         throw new Error('Failed to fetch data');
     }
     const json = await response.json();
-    return Response.json(json);
+    return NextResponse.json(json);
 }
+
