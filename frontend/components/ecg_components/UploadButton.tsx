@@ -54,6 +54,16 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalT
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={() => setSelectedSignalType('I')}>I</Dropdown.Item>
                     <Dropdown.Item onClick={() => setSelectedSignalType('II')}>II</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('III')}>III</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('AVR')}>AVR</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('AVL')}>AVL</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('AVF')}>AVF</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V1')}>V1</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V2')}>V2</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V3')}>V3</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V4')}>V4</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V5')}>V5</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setSelectedSignalType('V6')}>V6</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
 
