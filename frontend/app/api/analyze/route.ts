@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         pBeforeQrsAVR: json.AVR_p_before_qrs,
         pPositiveI: json.I_p_positive,
         pPositiveII: json.II_p_positive,
-        pNegativeAVR: json.I_p_negative,
+        pNegativeAVR: json.AVR_p_negative,
         bpm: json.bpm,
         verdict: json.verdict
     } as ConditionAnalyzeResponse

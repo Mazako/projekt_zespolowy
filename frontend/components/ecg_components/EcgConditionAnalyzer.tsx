@@ -41,22 +41,22 @@ export const EcgConditionAnalyzer: FC<EcgConditionAnalyzerProps> = ({visible, se
                         <p>Każdy zespół QRS poprzedzony jest załamkiem P w kanale II: {getEmoji(conditionAnalyze.pBeforeQrsII)}</p>
                         <p>Każdy zespół QRS poprzedzony jest załamkiem P w kanale AVR: {getEmoji(conditionAnalyze.pBeforeQrsAVR)}</p>
                         {
-                            conditionAnalyze.pPositiveI
+                            conditionAnalyze.pPositiveI != null
                             &&
                             <p>Załamki P dodatnie w kanale I: {getEmoji(conditionAnalyze.pPositiveI)}</p>
                         }
                         {
-                            conditionAnalyze.pPositiveII
+                            conditionAnalyze.pPositiveII != null
                             &&
                             <p>Załamki P dodatnie w kanale II: {getEmoji(conditionAnalyze.pPositiveII)}</p>
                         }
                         {
-                            conditionAnalyze.pNegativeAVR
+                            conditionAnalyze.pNegativeAVR != null
                             &&
                             <p>Załamki P ujemne w kanale AVR: {getEmoji(conditionAnalyze.pNegativeAVR)}</p>
                         }
                         {
-                            conditionAnalyze.bpm
+                            conditionAnalyze.bpm != null
                             &&
                             <p>Uderzeń na minutę: {conditionAnalyze.bpm}</p>
                         }
