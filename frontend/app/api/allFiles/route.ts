@@ -10,5 +10,6 @@ export async function GET() {
         throw new Error('Failed to fetch files');
     }
     const json = await response.json();
+
     return NextResponse.json(json);
 }

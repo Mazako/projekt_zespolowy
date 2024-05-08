@@ -35,7 +35,7 @@ const EcgPage = () => {
                     <EKGChart fileId={selectedFileId} signalType={selectedSignalType} settings={ecdSettings}/>
                 </div>
                 <div className="col-lg-2 col-md-2 pe-4"> {}
-                    <EcgMenu onSelectionChange={setEcdSettings}/>
+                    <EcgMenu onSelectionChange={setEcdSettings} ecdId={selectedFileId}/>
                 </div>
             </div>
         </div>

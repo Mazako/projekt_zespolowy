@@ -1,4 +1,5 @@
 import io
+import math
 from datetime import datetime, time, timedelta
 from typing import BinaryIO
 
@@ -48,4 +49,15 @@ def process_signal(signal, frequency) -> Signal:
     Q_Peaks = frame[frame['ECG_Q_Peaks'] == 1].index.tolist()
     S_Peaks = frame[frame['ECG_S_Peaks'] == 1].index.tolist()
     T_Peaks = frame[frame['ECG_T_Peaks'] == 1].index.tolist()
-    return Signal(data=cleaned_signal, R=R_Peaks, P=P_Peaks, Q=Q_Peaks, S=S_Peaks, T=T_Peaks)
+    bpm = frame['ECG_Rate'].mean()
+    return Signal(data=cleaned_signal, R=R_Peaks, P=P_Peaks, Q=Q_Peaks, S=S_Peaks, T=T_Peaks, bpm=bpm)
+
+
+def p_before_qrs_test(signal: Signal, max_disproportion: int) -> bool:
+    diff = math.fabs(len(signal.Q) - len(signal.P))
+    return diff <= max_disproportion
+
+
+def p_values_test(signal: Signal, predicate) -> bool:
+    values = list(filter(predicate, [signal.data[p] for p in signal.P]))
+    return len(values) == len(signal.P)

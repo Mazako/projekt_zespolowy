@@ -17,11 +17,12 @@ class Annotations(BaseModel):
 class Signal(BaseModel):
     data: list[float]
     annotations: list[str] | None = None
-    R: list[int] | None = None
-    P: list[int] | None = None
-    Q: list[int] | None = None
-    S: list[int] | None = None
-    T: list[int] | None = None
+    bpm: float | None = None
+    R: list[int | time] | None = None
+    P: list[int | time] | None = None
+    Q: list[int | time] | None = None
+    S: list[int | time] | None = None
+    T: list[int | time] | None = None
 
 
 class EcdModel(BaseModel):
@@ -54,12 +55,40 @@ class SignalType(str, Enum):
     I = 'I'
     II = 'II'
     III = 'III'
+    AVR = 'AVR'
+    AVL = 'AVL'
+    AVF = 'AVF'
+    V1 = 'V1'
+    V2 = 'V2'
+    V3 = 'V3'
+    V4 = 'V4'
+    V5 = 'V5'
+    V6 = 'V6'
 
 
-class SignalResponse(Signal):
+class SignalResponse(BaseModel):
     frequency: int
-    R: list[time] | None = None
-    P: list[time] | None = None
-    Q: list[time] | None = None
-    S: list[time] | None = None
-    T: list[time] | None = None
+    signals: dict[SignalType, Signal]
+
+
+class SignalDomain(str, Enum):
+    numeric = 'numeric'
+    time = 'time'
+
+
+class Verdict(str, Enum):
+    bradycardia = 'bradycardia'
+    tachycardia = 'tachycardia'
+    normal = 'normal'
+    dunno = 'cannot determine'
+
+
+class ConditionAnalyzeResponse(BaseModel):
+    I_p_before_qrs: bool
+    II_p_before_qrs: bool
+    AVR_p_before_qrs: bool
+    I_p_positive: bool | None = None
+    II_p_positive: bool | None = None
+    AVR_p_negative: bool | None = None
+    bpm: float | None = None
+    verdict: Verdict

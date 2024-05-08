@@ -5,7 +5,7 @@ from fastapi import APIRouter, UploadFile, Depends, Query
 from fastapi.encoders import jsonable_encoder
 
 from server.database import PyObjectId
-from server.model.ecd import SignalType
+from server.model.ecd import SignalType, SignalDomain
 from server.service.dependency import get_ecd_service
 from server.service.ecd import EcdService
 from server.Config import config
@@ -41,7 +41,7 @@ async def get_signal(
         end: time | None = None,
         ecd_service: EcdService = Depends(get_ecd_service),
 ):
-    return await ecd_service.get_signal_data(ecd_id, signal_type, start, end)
+    return await ecd_service.get_signal_data(ecd_id, [signal_type], SignalDomain.time, start, end)
 
 
 @ecd_router.get('/size')
@@ -52,3 +52,8 @@ async def ecd_size(ecd_service: EcdService = Depends(get_ecd_service)):
 @ecd_router.get('/prune')
 async def prune(ecd_service: EcdService = Depends(get_ecd_service)):
     await ecd_service.prune()
+
+
+@ecd_router.get('/analyze')
+async def analyze(ecd_id: str, ecd_service: EcdService = Depends(get_ecd_service)):
+    return await ecd_service.analyze_conditions(ecd_id)

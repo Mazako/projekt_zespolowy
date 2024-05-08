@@ -26,4 +26,18 @@ export interface EcdSettings {
 
 export interface EcgMenuProps {
     onSelectionChange: (settings: EcdSettings) => void;
+    ecdId?: string,
+}
+
+export type Verdict = 'bradycardia' | 'tachycardia' | 'normal' | 'cannot determine'
+
+export interface ConditionAnalyzeResponse {
+    pBeforeQrsI: boolean
+    pBeforeQrsII: boolean,
+    pBeforeQrsAVR: boolean,
+    pPositiveI?: boolean
+    pPositiveII?: boolean
+    pNegativeAVR?: boolean
+    bpm?: number,
+    verdict: Verdict
 }

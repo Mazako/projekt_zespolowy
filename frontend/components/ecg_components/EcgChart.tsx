@@ -80,15 +80,25 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
     }, [settings]);
 
     useEffect(() => {
-        if (fileId) {
+        if (fileId && signalType) {
             const fetchData = async () => {
                 const response = await fetch(`/api/ecd?fileId=${fileId}&signal_type=${signalType}`);
                 const json = await response.json();
-                setEcgData(json);
+                const signals = json.signals;
+                setEcgData({
+                    data: signals[signalType].data,
+                    annotations: undefined,
+                    frequency: json.frequency,
+                    P: signals[signalType].P,
+                    Q: signals[signalType].Q,
+                    R: signals[signalType].R,
+                    S: signals[signalType].S,
+                    T: signals[signalType].T
+                });
                 const period = 1 / json.frequency;
-                const generatedDataX = Array.from({length: json.data.length}, (_, index) => period * index);
+                const generatedDataX = Array.from({length: signals[signalType].data.length}, (_, index) => period * index);
 
-                setDataY(json.data);
+                setDataY(signals[signalType].data);
                 setDataX(generatedDataX);
             };
             fetchData();
