@@ -33,3 +33,6 @@ Następnie:
 npm run dev
 ```
 Aplikacja będzie dostępna w przeglądarce po wpisaniu adresu http://localhost:3000
+
+### Dataset
+https://physionet.org/content/ecg-arrhythmia/1.0.0/

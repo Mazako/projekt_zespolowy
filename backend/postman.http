@@ -14,7 +14,7 @@ Content-Disposition: form-data; name="mat"; filename="JS00005.mat"
 
 ###
 
-GET http://879f9f33fd0d.ngrok.app/ecd/allFiles
+GET http://localhost:8000/ecd/allFiles
 
 ###
 
@@ -22,4 +22,4 @@ GET http://localhost:8000/ecd/signal?ecd_id=661e482f456229e631b7a6d2&signal_type
 
 ###
 
-GET http://localhost:8000/ecd/size
+GET http://localhost:8000/ecd/analyze?ecd_id=663bae7255f3f45305380126
