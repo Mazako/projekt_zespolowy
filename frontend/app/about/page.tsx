@@ -2,7 +2,7 @@ const About = () => {
 
     return (
         <>
-            <div className="d-flex justify-content-around gap-3 my-1">
+            <div className="d-flex justify-content-around gap-3 my-1 mt-5">
                 <div className="w-50" style={{borderRight: '1px solid black'}}>
                     <p className="display-3">Autorzy:</p>
                     <ul>
