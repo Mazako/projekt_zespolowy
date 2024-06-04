@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
-import Chart from 'chart.js/auto';
+import Chart, {ActiveElement, ChartEvent} from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from "chartjs-plugin-annotation";
 import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
@@ -8,7 +8,7 @@ import {Annotation} from "@/utilsTypeScript/ecdChart/types/annotations";
 
 
 
-const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings }> = ({ fileId,signalType,settings }) => {
+const EKGChart: FC<{ fileId?: string, signalType?: string, settings:EcdSettings }> = ({ fileId,signalType,settings }) => {
 
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const [dataX, setDataX] = useState<number[]>([]);
@@ -19,15 +19,44 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
 
     const chartInstanceRef = useRef<Chart | null>(null);
 
+    const handleChartClick = async (_: ChartEvent, elements: ActiveElement[]) => {
+        if (!elements.length || !settings.addPMode || !chartInstanceRef.current) {
+            return;
+        }
+        const response = await fetch('/api/addP', {
+            method: "POST",
+            cache: "no-cache",
+            body: JSON.stringify({
+                ecd_id: fileId,
+                signal: signalType,
+                index: elements[0].index
+            }),
+        })
+
+        if (response.ok) {
+            const data = await response.json() as string[];
+            setEcgData(prev => {
+                if (!prev || !prev.P) {
+                    return prev;
+                }
+                return {
+                    ...prev,
+                    P: data
+                }
+            });
+        }
+
+        chartInstanceRef.current.update();
+    }
+
     useEffect(() => {
         if (settings && ecgData) {
             const newAnnotations = createAnnotations(settings,ecgData);
             setAnnotations(newAnnotations);
         }
-    }, [settings]);
+    }, [settings, ecgData]);
 
     useEffect(() => {
-
         if (fileId && signalType) {
             const fetchData = async () => {
                 const response = await fetch(`/api/ecd?fileId=${fileId}&signal_type=${signalType}`);
@@ -77,6 +106,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                         }]
                     },
                     options: {
+                        onClick: handleChartClick,
                         animation: {
                             duration: 0,
                         },
@@ -133,14 +163,11 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                 chartInstanceRef.current = chartInstance;
             }
         }
-        //@ts-ignore
-        console.log( "max 11max " + chartInstanceRef.current.options.scales.x.max)
         return () => {
             if (chartInstance) {
                 chartInstance.destroy();
                 chartInstance = null;
             }
-
         };
     }, [dataX, dataY,annotations]);
 

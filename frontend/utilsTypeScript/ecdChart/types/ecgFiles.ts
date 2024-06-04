@@ -21,6 +21,7 @@ export interface EcdSettings {
     showR: boolean;
     showS: boolean;
     showT: boolean;
+    addPMode: boolean;
 }
 
 

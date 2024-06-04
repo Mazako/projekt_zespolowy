@@ -144,3 +144,11 @@ class EcdService:
             results['verdict'] = Verdict.bradycardia
 
         return ConditionAnalyzeResponse(**results)
+
+    async def add_p(self, ecd_id: PyObjectId, signal_type: SignalType, index: int):
+        print({'$push': {f'{signal_type.value}.P': index}})
+        await self.ecd_collection.update_one(
+            {'_id': ObjectId(ecd_id)},
+            {'$push': {f'{signal_type.value}.P': index}},
+            upsert=True
+        )

@@ -1,36 +1,35 @@
-'use client'
+'use client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useEffect, useState} from "react";
 import {ConditionAnalyzeResponse, EcgMenuProps} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import {EcgConditionAnalyzer} from "@/components/ecg_components/EcgConditionAnalyzer";
 
 
-
-const EcgMenu: React.FC<EcgMenuProps> = ({ onSelectionChange, ecdId}) => {
+const EcgMenu: React.FC<EcgMenuProps> = ({onSelectionChange, ecdId}) => {
     const [showP, setShowP] = useState(false);
     const [showQ, setShowQ] = useState(false);
     const [showR, setShowR] = useState(false);
     const [showS, setShowS] = useState(false);
     const [showT, setShowT] = useState(false);
+    const [addPMode, setAddPMode] = useState(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [conditionAnalyzeResponse, setConditionAnalyzeResponse] = useState<ConditionAnalyzeResponse>()
+    const [conditionAnalyzeResponse, setConditionAnalyzeResponse] = useState<ConditionAnalyzeResponse>();
 
-
-    const handleChange = () => {
+    useEffect(() => {
         onSelectionChange({
-            showP, showQ, showR, showS, showT
+            showP, showQ, showR, showS, showT, addPMode
         });
-    };
+    }, [showP, showQ, showR, showS, showT, addPMode]);
 
     const handleAnalyzeClick = async () => {
         if (!ecdId) {
-            alert('Najpierw wybierz plik')
+            alert('Najpierw wybierz plik');
             return;
         }
         const data = await (await fetch(`/api/analyze?ecd_id=${ecdId}`)).json() as ConditionAnalyzeResponse;
         setConditionAnalyzeResponse(data);
         setModalVisible(true);
-    }
+    };
 
     return (
         <div className="container mt-3">
@@ -40,7 +39,11 @@ const EcgMenu: React.FC<EcgMenuProps> = ({ onSelectionChange, ecdId}) => {
                         <h4 className="mb-3 text-center">Ustawienia EKG</h4>
                         <div className="form-check mb-2">
                             <input className="form-check-input" type="checkbox" checked={showP}
-                                   onChange={() => setShowP(!showP)} id="flexCheckP"/>
+                                   onChange={() => {
+                                       setShowP(!showP);
+                                       setAddPMode(false);
+                                   }
+                                   } id="flexCheckP"/>
                             <label className="form-check-label">Pokaż załamki P</label>
                         </div>
                         <div className="form-check mb-2">
@@ -63,16 +66,27 @@ const EcgMenu: React.FC<EcgMenuProps> = ({ onSelectionChange, ecdId}) => {
                                    onChange={() => setShowT(!showT)} id="flexCheckT"/>
                             <label className="form-check-label">Pokaż załamki T</label>
                         </div>
-                        <div className='d-flex flex-column'>
-                            <button className="btn btn-primary mt-2" onClick={handleChange}>Zastosuj</button>
-                            <button className="btn btn-primary mt-2" onClick={handleAnalyzeClick}>Przeanalizuj sygnał</button>
+                        <div className="d-flex flex-column">
+                            <button className="btn btn-primary mt-2" onClick={handleAnalyzeClick}>
+                                Przeanalizuj sygnał
+                            </button>
+                            {
+                                showP
+                                &&
+                                <button className="btn btn-primary mt-2"
+                                        onClick={() => setAddPMode(!addPMode)}
+                                        style={{backgroundColor: addPMode ? "red" : "green"}}>
+                                    {(addPMode ? 'Wyłącz' : 'Włącz') + ' tryb dodawania P'}
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <EcgConditionAnalyzer visible={modalVisible} setVisible={setModalVisible} conditionAnalyze={conditionAnalyzeResponse}/>
+            <EcgConditionAnalyzer visible={modalVisible} setVisible={setModalVisible}
+                                  conditionAnalyze={conditionAnalyzeResponse}/>
         </div>
     );
-}
+};
 
 export default EcgMenu;

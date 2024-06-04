@@ -15,7 +15,8 @@ const EcgPage = () => {
         showQ: false,
         showR: false,
         showS: false,
-        showT: false
+        showT: false,
+        addPMode: false,
     });
 
     const handleSelectFile = (fileId: string, signalType: string) => {

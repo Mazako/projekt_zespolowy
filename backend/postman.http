@@ -23,3 +23,14 @@ GET http://localhost:8000/ecd/signal?ecd_id=661e482f456229e631b7a6d2&signal_type
 ###
 
 GET http://localhost:8000/ecd/analyze?ecd_id=663bae7255f3f45305380126
+
+###
+
+POST localhost:8000/ecd/addP
+Content-Type: application/json
+
+{
+  "ecd_id": "665f010c7d086740eb00e501",
+  "signal": "I",
+  "index": 1000
+}

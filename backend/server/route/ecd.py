@@ -1,8 +1,9 @@
 from datetime import time
 from typing import Annotated
 
-from fastapi import APIRouter, UploadFile, Depends, Query
+from fastapi import APIRouter, UploadFile, Depends, Query, Response
 from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
 
 from server.database import PyObjectId
 from server.model.ecd import SignalType, SignalDomain
@@ -57,3 +58,17 @@ async def prune(ecd_service: EcdService = Depends(get_ecd_service)):
 @ecd_router.get('/analyze')
 async def analyze(ecd_id: str, ecd_service: EcdService = Depends(get_ecd_service)):
     return await ecd_service.analyze_conditions(ecd_id)
+
+
+class AddPPayload(BaseModel):
+    ecd_id: str
+    signal: SignalType
+    index: int
+
+
+@ecd_router.post('/addP')
+async def add_p(payload: AddPPayload, ecd_service: EcdService = Depends(get_ecd_service)):
+    await ecd_service.add_p(payload.ecd_id, payload.signal, payload.index)
+    data = await ecd_service.get_signal_data(payload.ecd_id, [payload.signal], SignalDomain.time)
+    return data.signals[payload.signal.value].P
+
