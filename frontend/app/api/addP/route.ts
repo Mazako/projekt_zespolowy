@@ -8,7 +8,7 @@ export async function POST(nextRequest: NextRequest) {
         cache: 'no-cache',
         body: nextRequest.body,
         duplex: 'half'
-    });
+    } as RequestInit);
 
 
     return NextResponse.json(await response.json(), {status: response.status});
