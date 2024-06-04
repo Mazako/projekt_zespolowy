@@ -220,8 +220,8 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings:EcdSettings 
             {ecgData && ecgData.R && (
                 <div className={"mt-2"}>
                     <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(0)}>Reset</button>
-                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
                     <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(-1)}>Poprzedni</button>
+                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
                 </div>
             )}
         </div>
