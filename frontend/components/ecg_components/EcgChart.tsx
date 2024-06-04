@@ -3,8 +3,9 @@ import Chart from 'chart.js/auto';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from "chartjs-plugin-annotation";
 import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
-import {createAnnotations} from "@/utilsTypeScript/ecdChart/chartUtils";
+import {convertToPosition, createAnnotations} from "@/utilsTypeScript/ecdChart/chartUtils";
 import {Annotation} from "@/utilsTypeScript/ecdChart/types/annotations";
+
 
 
 const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings }> = ({ fileId,signalType,settings }) => {
@@ -14,63 +15,9 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
     const [dataY, setDataY] = useState<number[]>([]);
     const [ecgData, setEcgData] = useState<EcgJsonData | null>(null);
     const [annotations, setAnnotations] = useState<Annotation[]>([]);
-    const dragStartRef = useRef<{ x: number; y: number } | null>(null);
+    const [currentR, setCurrentR] = useState(0); // New state to manage R index
+
     const chartInstanceRef = useRef<Chart | null>(null);
-
-    const handleMouseDown = (event: MouseEvent) => {
-        if (event.button !== 2) return;
-
-        const chart = chartInstanceRef.current;
-        if (chart && chartRef.current) {
-            const rect = chartRef.current.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            const xValue = chart.scales.x.getValueForPixel(x) ?? 0;
-            const yValue = chart.scales.y.getValueForPixel(y) ?? 0;
-            dragStartRef.current = { x: xValue, y: yValue };
-        }
-    };
-
-    const handleMouseUp = (event: MouseEvent) => {
-        if (event.button !== 2) return;
-
-        const chart = chartInstanceRef.current;
-        if (chart && dragStartRef.current && chartRef.current) {
-            const rect = chartRef.current.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-
-            const xValue = chart.scales.x.getValueForPixel(x) ?? 0;
-            const yValue = chart.scales.y.getValueForPixel(y) ?? 0;
-
-            const newAnnotation: Annotation = {
-                type: 'box',
-                xMin: Math.min(dragStartRef.current.x, xValue),
-                xMax: Math.max(dragStartRef.current.x, xValue),
-                yMin: Math.min(dragStartRef.current.y, yValue),
-                yMax: Math.max(dragStartRef.current.y, yValue),
-                borderColor: 'rgba(0,0,0)',
-                backgroundColor: 'rgba(255, 99, 132, 0.25)',
-            };
-
-            setAnnotations(prevAnnotations => [...prevAnnotations, newAnnotation]);
-            dragStartRef.current = null;
-
-        }
-    };
-
-    useEffect(() => {
-        if (chartRef.current) {
-            const canvas = chartRef.current;
-            canvas.addEventListener('mousedown', handleMouseDown);
-            canvas.addEventListener('mouseup', handleMouseUp);
-            return () => {
-                canvas.removeEventListener('mousedown', handleMouseDown);
-                canvas.removeEventListener('mouseup', handleMouseUp);
-            };
-        }
-    }, []);
 
     useEffect(() => {
         if (settings && ecgData) {
@@ -80,6 +27,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
     }, [settings]);
 
     useEffect(() => {
+
         if (fileId && signalType) {
             const fetchData = async () => {
                 const response = await fetch(`/api/ecd?fileId=${fileId}&signal_type=${signalType}`);
@@ -101,9 +49,10 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                 setDataY(signals[signalType].data);
                 setDataX(generatedDataX);
             };
-            fetchData();
+            fetchData().then();
         }
-    }, [fileId]);
+    }, [fileId, signalType]);
+
 
     useEffect(() => {
         let chartInstance: Chart | null = null;
@@ -184,14 +133,72 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings?:EcdSettings
                 chartInstanceRef.current = chartInstance;
             }
         }
+        //@ts-ignore
+        console.log( "max 11max " + chartInstanceRef.current.options.scales.x.max)
         return () => {
             if (chartInstance) {
                 chartInstance.destroy();
                 chartInstance = null;
             }
+
         };
     }, [dataX, dataY,annotations]);
-    return <canvas ref={chartRef} />;
+
+    const changeWindow = (inc : number) =>{
+
+        if (inc ==0 ){
+            //@ts-ignore
+            chartInstanceRef.current.options.scales.x.min = 0;
+            //@ts-ignore
+            chartInstanceRef.current.options.scales.x.max = 10;
+            chartInstanceRef.current?.update();
+            setCurrentR(0);
+            return;
+        }
+        const newIndex = currentR + inc;
+        console.log(newIndex)
+        if (ecgData?.R && (newIndex <0 || newIndex > ecgData.R.length -2) ){
+            return;
+        }
+        setCurrentR(newIndex);
+
+
+        if (ecgData?.R) {
+            const lastIndex = ecgData.R.length - 1;
+            let xMin, xMax;
+
+            if (newIndex < lastIndex-1) {
+                xMin = convertToPosition(ecgData.R[newIndex]);
+                xMax = convertToPosition(ecgData.R[newIndex + 2]);
+            }else if (newIndex === lastIndex-1) {
+                xMin = convertToPosition(ecgData.R[newIndex]);
+                xMax = convertToPosition(ecgData.R[newIndex+1]) +convertToPosition(ecgData.R[0]);
+            } else {
+                return;
+            }
+            //@ts-ignore
+            chartInstanceRef.current.options.scales.x.min = xMin + 0.1
+            //@ts-ignore
+            chartInstanceRef.current.options.scales.x.max = xMax - 0.1
+            chartInstanceRef.current?.update();
+
+        }
+
+    }
+
+
+    return (
+        <div className={"text-center"}>
+            <canvas ref={chartRef} />
+            {ecgData && ecgData.R && (
+                <div className={"mt-2"}>
+                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(0)}>Reset</button>
+                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
+                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(-1)}>Poprzedni</button>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default EKGChart;

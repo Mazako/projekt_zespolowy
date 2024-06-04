@@ -1,6 +1,6 @@
 'use client'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ConditionAnalyzeResponse, EcgMenuProps} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import {EcgConditionAnalyzer} from "@/components/ecg_components/EcgConditionAnalyzer";
 

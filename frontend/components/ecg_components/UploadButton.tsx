@@ -26,11 +26,12 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalT
         fetchFiles();
     }, []);
 
-    const handleSubmit = () => {
+    useEffect(() => {
         if (selectedFile && selectedSignalType) {
             onSelectFile(selectedFile._id, selectedSignalType);
         }
-    };
+    }, [selectedSignalType, selectedFile]);
+
 
     return (
         <div className="d-flex align-items-start">
@@ -52,24 +53,14 @@ const UploadButton = ({ onSelectFile }: { onSelectFile: (fileId: string, signalT
                     {selectedSignalType || 'Wybierz sygnał'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('I')}>I</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('II')}>II</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('III')}>III</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('AVR')}>AVR</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('AVL')}>AVL</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('AVF')}>AVF</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V1')}>V1</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V2')}>V2</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V3')}>V3</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V4')}>V4</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V5')}>V5</Dropdown.Item>
-                    <Dropdown.Item onClick={() => setSelectedSignalType('V6')}>V6</Dropdown.Item>
+                    {['I', 'II', 'III', 'AVR', 'AVL', 'AVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'].map(signal => (
+                        <Dropdown.Item key={signal} onClick={() => setSelectedSignalType(signal)}>
+                            {signal}
+                        </Dropdown.Item>
+                    ))}
                 </Dropdown.Menu>
             </Dropdown>
 
-            <Button variant="primary" onClick={handleSubmit}>
-                Wyślij
-            </Button>
         </div>
     );
 };

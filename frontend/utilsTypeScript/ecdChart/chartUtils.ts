@@ -2,7 +2,7 @@ import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFile
 import {LineAnnotation} from "@/utilsTypeScript/ecdChart/types/annotations";
 
 
-const convertToPosition = (timeStr: string) => {
+export const convertToPosition = (timeStr: string) => {
     const parts = timeStr.split(':');
     const hours = parseFloat(parts[0]);
     const minutes = parseFloat(parts[1]);

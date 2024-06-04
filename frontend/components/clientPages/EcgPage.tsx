@@ -19,6 +19,7 @@ const EcgPage = () => {
     });
 
     const handleSelectFile = (fileId: string, signalType: string) => {
+        console.log(fileId, signalType)
         setSelectedFileId(fileId);
         setSelectedSignalType(signalType);
     };
