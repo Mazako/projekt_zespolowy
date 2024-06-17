@@ -61,7 +61,7 @@ export const EcgConditionAnalyzer: FC<EcgConditionAnalyzerProps> = ({visible, se
                             <p>Uderzeń na minutę: {conditionAnalyze.bpm}</p>
                         }
 
-                        <p className='text-danger'>Werykt: {translateVerdict(conditionAnalyze.verdict)}</p>
+                        <p className='text-danger'>Werdykt: {translateVerdict(conditionAnalyze.verdict)}</p>
                     </div>
                 }
             </Modal.Body>

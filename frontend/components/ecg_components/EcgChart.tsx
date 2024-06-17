@@ -5,6 +5,7 @@ import annotationPlugin from "chartjs-plugin-annotation";
 import {EcdSettings, EcgJsonData} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import {convertToPosition, createAnnotations} from "@/utilsTypeScript/ecdChart/chartUtils";
 import {Annotation} from "@/utilsTypeScript/ecdChart/types/annotations";
+import {Alert} from "react-bootstrap";
 
 
 
@@ -218,10 +219,15 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings:EcdSettings 
         <div className={"text-center"}>
             <canvas ref={chartRef} />
             {ecgData && ecgData.R && (
-                <div className={"mt-2"}>
-                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(0)}>Reset</button>
-                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(-1)}>Poprzedni</button>
-                    <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
+                <div>
+                    <div className={"mt-2"}>
+                        <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(0)}>Reset</button>
+                        <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(-1)}>Poprzedni</button>
+                        <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
+                    </div>
+                    <Alert className='text-start my-3'>
+                        Aby zapisać wykres, naciśnij na nim prawy przycisk myszy, i wybierz opcję "Zapisz grafikę jako..."
+                    </Alert>
                 </div>
             )}
         </div>

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useEffect, useState} from "react";
 import {ConditionAnalyzeResponse, EcgMenuProps} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import {EcgConditionAnalyzer} from "@/components/ecg_components/EcgConditionAnalyzer";
+import {toast} from "react-toastify";
 
 
 const EcgMenu: React.FC<EcgMenuProps> = ({onSelectionChange, ecdId}) => {
@@ -31,6 +32,15 @@ const EcgMenu: React.FC<EcgMenuProps> = ({onSelectionChange, ecdId}) => {
         setModalVisible(true);
     };
 
+    const handleAddPModeClick = () => {
+        if (!addPMode) {
+            toast('Włączono tryb dodawania załamków P. Klikaj lewym przyciskiem na wykres w miejsce, gdzie chcesz dodać załamek.')
+        } else {
+            toast('Wyłączono tryb dodawania załamków P.')
+        }
+        setAddPMode(!addPMode);
+    }
+
     return (
         <div className="container mt-3">
             <div className="row">
@@ -49,7 +59,7 @@ const EcgMenu: React.FC<EcgMenuProps> = ({onSelectionChange, ecdId}) => {
                         <div className="form-check mb-2">
                             <input className="form-check-input" type="checkbox" checked={showQ}
                                    onChange={() => setShowQ(!showQ)} id="flexCheckQ"/>
-                            <label className="form-check-label">Pokaż załamkiQ</label>
+                            <label className="form-check-label">Pokaż załamki Q</label>
                         </div>
                         <div className="form-check mb-2">
                             <input className="form-check-input" type="checkbox" checked={showR}
@@ -74,7 +84,7 @@ const EcgMenu: React.FC<EcgMenuProps> = ({onSelectionChange, ecdId}) => {
                                 showP
                                 &&
                                 <button className="btn btn-primary mt-2"
-                                        onClick={() => setAddPMode(!addPMode)}
+                                        onClick={handleAddPModeClick}
                                         style={{backgroundColor: addPMode ? "red" : "green"}}>
                                     {(addPMode ? 'Wyłącz' : 'Włącz') + ' tryb dodawania P'}
                                 </button>

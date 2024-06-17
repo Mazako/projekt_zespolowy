@@ -1,10 +1,12 @@
-'use client'
+'use client';
 
 import EKGChart from "@/components/ecg_components/EcgChart";
 import UploadButton from "@/components/ecg_components/UploadButton";
 import {useState} from "react";
 import {EcdSettings} from "@/utilsTypeScript/ecdChart/types/ecgFiles";
 import EcgMenu from "@/components/ecg_components/EcgMenu";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const EcgPage = () => {
 
@@ -40,6 +42,7 @@ const EcgPage = () => {
                     <EcgMenu onSelectionChange={setEcdSettings} ecdId={selectedFileId}/>
                 </div>
             </div>
+            <ToastContainer position='bottom-right' />
         </div>
     );
 };
