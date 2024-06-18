@@ -22,6 +22,14 @@ export interface EcdSettings {
     showS: boolean;
     showT: boolean;
     addPMode: boolean;
+
+    colors: {
+        P: string;
+        Q: string;
+        R: string;
+        S: string;
+        T: string;
+    }
 }
 
 

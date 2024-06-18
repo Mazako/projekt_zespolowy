@@ -19,6 +19,13 @@ const EcgPage = () => {
         showS: false,
         showT: false,
         addPMode: false,
+        colors:{
+            P: '#ff0000',
+            Q: '#ffa500',
+            R: '#0000ff',
+            S: '#000000',
+            T: '#3cb371'
+        }
     });
 
     const handleSelectFile = (fileId: string, signalType: string) => {

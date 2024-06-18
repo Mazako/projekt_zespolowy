@@ -26,19 +26,19 @@ export function createAnnotations(settings?: EcdSettings, ecdData?: EcgJsonData)
         };
 
         if (settings.showP && ecdData?.P) {
-            ecdData.P.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(255, 0, 0)'));
+            ecdData.P.map(convertToPosition).forEach(pos => addAnnotation(pos, settings.colors.P));
         }
         if (settings.showQ && ecdData?.Q) {
-            ecdData.Q.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(255, 165, 0)'));
+            ecdData.Q.map(convertToPosition).forEach(pos => addAnnotation(pos, settings.colors.Q));
         }
         if (settings.showR && ecdData?.R) {
-            ecdData.R.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(0, 0, 255)'));
+            ecdData.R.map(convertToPosition).forEach(pos => addAnnotation(pos, settings.colors.R));
         }
         if (settings.showS && ecdData?.S) {
-            ecdData.S.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(0, 0, 0)'));
+            ecdData.S.map(convertToPosition).forEach(pos => addAnnotation(pos, settings.colors.S));
         }
         if (settings.showT && ecdData?.T) {
-            ecdData.T.map(convertToPosition).forEach(pos => addAnnotation(pos, 'rgb(60, 179, 113)'));
+            ecdData.T.map(convertToPosition).forEach(pos => addAnnotation(pos, settings.colors.T));
         }
     }
     return annotations;

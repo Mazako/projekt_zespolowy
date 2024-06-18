@@ -16,7 +16,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings:EcdSettings 
     const [dataY, setDataY] = useState<number[]>([]);
     const [ecgData, setEcgData] = useState<EcgJsonData | null>(null);
     const [annotations, setAnnotations] = useState<Annotation[]>([]);
-    const [currentR, setCurrentR] = useState(0); // New state to manage R index
+    const [currentR, setCurrentR] = useState(0);
 
     const chartInstanceRef = useRef<Chart | null>(null);
 
