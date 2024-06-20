@@ -226,7 +226,7 @@ const EKGChart: FC<{ fileId?: string, signalType?: string, settings:EcdSettings 
                         <button className={"btn btn-primary mx-1"} onClick={() => changeWindow(1)}>Kolejny</button>
                     </div>
                     <Alert className='text-start my-3'>
-                        Aby zapisać wykres, naciśnij na nim prawy przycisk myszy, i wybierz opcję "Zapisz grafikę jako..."
+                        Aby zapisać wykres, naciśnij na nim prawy przycisk myszy, i wybierz opcję &apos;Zapisz grafikę jako...&apos;
                     </Alert>
                 </div>
             )}
